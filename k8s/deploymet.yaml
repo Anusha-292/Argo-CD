@@ -13,12 +13,9 @@ spec:
     metadata:
       labels:
         app: apache-hello
-      annotations:
-        # Optional: for Argo CD Image Updater (if you install it)
-        argocd-image-updater.argoproj.io/apache-hello.image-list: apache-hello=${DOCKERHUB_USERNAME}/apache-hello
     spec:
       containers:
         - name: apache
-          image: ${DOCKERHUB_USERNAME}/apache-hello:latest
+          image: DOCKER_USER/apache-hello:latest
           ports:
             - containerPort: 80

@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up QEMU (optional for multi-arch)
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
@@ -26,7 +26,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build image (sha tag)
+      # 🔥 Replace placeholder DOCKER_USER in deployment.yaml
+      - name: Update deployment.yaml with DockerHub username
+        run: |
+          sed -i "s|DOCKER_USER|${{ secrets.DOCKERHUB_USERNAME }}|g" k8s/deployment.yaml
+
+      - name: Build image (SHA tag)
         run: |
           IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/apache-hello"
           TAG="${{ github.sha }}"
