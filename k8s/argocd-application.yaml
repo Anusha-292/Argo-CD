@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/Anusha-292/Argo-CD.git'
-    targetRevision: main
+    targetRevision: testing
     path: k8s
   destination:
     server: 'https://kubernetes.default.svc'
