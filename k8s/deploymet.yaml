@@ -19,6 +19,6 @@ spec:
     spec:
       containers:
         - name: apache
-          image: httpd:2.4
+          image: ${DOCKERHUB_USERNAME}/apache-hello:latest
           ports:
             - containerPort: 80
