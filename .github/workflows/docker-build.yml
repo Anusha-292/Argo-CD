@@ -29,7 +29,7 @@ jobs:
       # 🔥 Replace placeholder DOCKER_USER in deployment.yaml
       - name: Update deployment.yaml with DockerHub username
         run: |
-          sed -i "s|DOCKER_USER|${{ secrets.DOCKERHUB_USERNAME }}|g" k8s/deployment.yaml
+          sed -i "s|docker_user|${{ secrets.DOCKERHUB_USERNAME }}|g" k8s/deployment.yaml
 
       - name: Build image (SHA tag)
         run: |
