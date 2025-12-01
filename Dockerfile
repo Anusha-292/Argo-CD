@@ -1,4 +1,4 @@
-i# Use official Apache HTTP Server image
+# Use official Apache HTTP Server image
 FROM httpd:2.4
 
 # Copy your index.html into Apache's default web directory
