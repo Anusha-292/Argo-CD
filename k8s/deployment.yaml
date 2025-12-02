@@ -5,9 +5,14 @@ metadata:
   labels:
     app: apache-hello
   annotations:
-    argocd-image-updater.argoproj.io/image-list: apache=anusha292/apache-hello
+    # ArgoCD Image Updater watches this image
+    argocd-image-updater.argoproj.io/image-list: apache=docker.io/anusha292/apache-hello
+
+    # Tell it to use our pull secret
     argocd-image-updater.argoproj.io/apache.pull-secret: pullsecret:docker-creds
-    argocd-image-updater.argoproj.io/apache.update-strategy: latest
+
+    # Strategy: always pick the newest digest / tag
+    argocd-image-updater.argoproj.io/apache.update-strategy: digest
 spec:
   replicas: 1
   selector:
@@ -22,6 +27,6 @@ spec:
         - name: docker-creds
       containers:
         - name: apache
-          image: anusha292/apache-hello:latest
+          image: docker.io/anusha292/apache-hello:sha-PLACEHOLDER
           ports:
             - containerPort: 80
