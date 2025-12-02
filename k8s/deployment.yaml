@@ -27,6 +27,6 @@ spec:
         - name: docker-creds
       containers:
         - name: apache
-          image: docker.io/anusha292/apache-hello:sha-PLACEHOLDER
+          image: docker.io/anusha292/apache-hello
           ports:
             - containerPort: 80
