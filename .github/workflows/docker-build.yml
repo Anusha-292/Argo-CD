@@ -3,7 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main
+      - testing
   workflow_dispatch:
 
 jobs:
@@ -29,14 +29,14 @@ jobs:
           TAG="v$(date +'%Y%m%d-%H%M%S')"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
-      - name: Build image
+      - name: Build image with timestamp tag
         run: |
           IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/apache-hello"
           TAG="${{ steps.version.outputs.tag }}"
           docker build -t $IMAGE:$TAG .
           docker push $IMAGE:$TAG
 
-      - name: Tag latest
+      - name: Tag and push latest
         run: |
           IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/apache-hello"
           TAG="${{ steps.version.outputs.tag }}"
