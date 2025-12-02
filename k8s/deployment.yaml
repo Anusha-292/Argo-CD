@@ -4,6 +4,10 @@ metadata:
   name: apache-hello
   labels:
     app: apache-hello
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: apache=anusha292/apache-hello
+    argocd-image-updater.argoproj.io/apache.pull-secret: pullsecret:docker-creds
+    argocd-image-updater.argoproj.io/apache.update-strategy: latest
 spec:
   replicas: 1
   selector:
@@ -14,8 +18,10 @@ spec:
       labels:
         app: apache-hello
     spec:
+      imagePullSecrets:
+        - name: docker-creds
       containers:
         - name: apache
-          image: docker_user/apache-hello:latest
+          image: anusha292/apache-hello:latest
           ports:
             - containerPort: 80
