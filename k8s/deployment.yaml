@@ -5,10 +5,17 @@ metadata:
   labels:
     app: apache-hello
   annotations:
+    # Image list for ArgoCD Image Updater
     argocd-image-updater.argoproj.io/image-list: apache=docker.io/anusha292/apache-hello
-    argocd-image-updater.argoproj.io/apache.update-strategy: semver
-    argocd-image-updater.argoproj.io/apache.allow-tags: regexp:^v[0-9]+\.[0-9]+\.[0-9]+$
+
+    # Use pull secret for DockerHub authentication
     argocd-image-updater.argoproj.io/apache.pull-secret: pullsecret:docker-creds
+
+    # Use tag-based versioning (semver pattern)
+    argocd-image-updater.argoproj.io/apache.update-strategy: "semver"
+
+    # Allow timestamp versioning even though it's not pure semver
+    argocd-image-updater.argoproj.io/apache.allow-tags: "regexp:^v[0-9]{8}-[0-9]{6}$"
 spec:
   replicas: 1
   selector:
