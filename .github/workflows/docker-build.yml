@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - testing
-  workflow_dispatch:
 
 jobs:
   build-and-push:
@@ -13,9 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -26,24 +22,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 🔥 Replace placeholder DOCKER_USER in deployment.yaml
-      - name: Update deployment.yaml with DockerHub username
+      - name: Build & Push Image (semver tag + latest)
         run: |
-          sed -i "s|docker_user|${{ secrets.DOCKERHUB_USERNAME }}|g" k8s/deployment.yaml
-
-      - name: Build image (SHA tag)
-        run: |
+          VERSION="v$(date +'%Y%m%d%H%M')"   # Example: v202512020945
           IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/apache-hello"
-          TAG="${{ github.sha }}"
-          docker build -t $IMAGE:$TAG .
-          docker push $IMAGE:$TAG
 
-      - name: Tag and push latest
-        run: |
-          IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/apache-hello"
-          TAG="${{ github.sha }}"
-          docker tag $IMAGE:$TAG $IMAGE:latest
+          docker build -t $IMAGE:$VERSION .
+          docker push $IMAGE:$VERSION
+
+          docker tag $IMAGE:$VERSION $IMAGE:latest
           docker push $IMAGE:latest
-
-      - name: Output image info
-        run: echo "Pushed ${{ secrets.DOCKERHUB_USERNAME }}/apache-hello:${{ github.sha }} and :latest"
