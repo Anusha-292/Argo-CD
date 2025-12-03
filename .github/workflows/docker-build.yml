@@ -42,7 +42,7 @@ jobs:
       # Required for continued increments
       - name: Commit updated VERSION file
         run: |
-          git config --global user.email "https://github.com/Anusha-292/"
+          git config --global user.email "anushareddy29200@gmail.com"
           git config --global user.name "Anusha-292"
           git add VERSION
           git commit -m "Bump VERSION to ${{ steps.semver.outputs.version }}" || echo "No changes to commit"
