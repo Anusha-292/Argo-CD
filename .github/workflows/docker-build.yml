@@ -46,7 +46,7 @@ jobs:
           git config --global user.name "Anusha-292"
           git add VERSION
           git commit -m "Bump VERSION to ${{ steps.semver.outputs.version }}" || echo "No changes to commit"
-          git push
+          git push origin testing
 
       # ---- Docker buildx ----
       - name: Set up Docker Buildx
