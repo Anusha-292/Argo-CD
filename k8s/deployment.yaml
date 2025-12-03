@@ -4,15 +4,6 @@ metadata:
   name: apache-hello
   labels:
     app: apache-hello
-  annotations:
-    # ArgoCD Image Updater will track ONLY this image repo
-    argocd-image-updater.argoproj.io/image-list: apache=docker.io/anusha292/apache-hello
-
-    # Use digest strategy → works with timestamp tags perfectly
-    argocd-image-updater.argoproj.io/apache.update-strategy: digest
-
-    # Use docker registry pull secret
-    argocd-image-updater.argoproj.io/apache.pull-secret: pullsecret:docker-creds
 spec:
   replicas: 1
   selector:
@@ -27,7 +18,7 @@ spec:
         - name: docker-creds
       containers:
         - name: apache
-          # Placeholder only — updater will replace this automatically
-          image: docker.io/anusha292/apache-hello:v0.0.0
+          image: docker.io/anusha292/apache-hello:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
