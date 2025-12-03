@@ -74,3 +74,5 @@ jobs:
 
           docker tag $IMAGE:$VERSION $IMAGE:latest
           docker push $IMAGE:latest
+
+          
