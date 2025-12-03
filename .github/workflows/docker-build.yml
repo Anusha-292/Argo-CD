@@ -3,7 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - testing
+      - main
   workflow_dispatch:
 
 jobs:
@@ -14,6 +14,41 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # ---- Read & increment SemVer ----
+      - name: Determine next semantic version
+        id: semver
+        run: |
+          # if VERSION file doesn't exist, create base version
+          if [ ! -f VERSION ]; then
+            echo "v1.0.0" > VERSION
+          fi
+
+          VERSION=$(cat VERSION)
+
+          # extract MAJOR.MINOR.PATCH
+          MAJOR=$(echo $VERSION | cut -d. -f1 | sed 's/v//')
+          MINOR=$(echo $VERSION | cut -d. -f2)
+          PATCH=$(echo $VERSION | cut -d. -f3)
+
+          # increment PATCH
+          NEW_PATCH=$((PATCH + 1))
+          NEW_VERSION="v$MAJOR.$MINOR.$NEW_PATCH"
+
+          echo $NEW_VERSION > VERSION
+
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      # ---- Save updated VERSION file back to repo ----
+      # Required for continued increments
+      - name: Commit updated VERSION file
+        run: |
+          git config --global user.email "https://github.com/Anusha-292/"
+          git config --global user.name "Anusha-292"
+          git add VERSION
+          git commit -m "Bump VERSION to ${{ steps.semver.outputs.version }}" || echo "No changes to commit"
+          git push
+
+      # ---- Docker buildx ----
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -23,22 +58,19 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Generate timestamp tag
-        id: version
-        run: |
-          TAG="v$(date +'%Y%m%d-%H%M%S')"
-          echo "tag=$TAG" >> $GITHUB_OUTPUT
-
-      - name: Build & Push Image
+      # ---- Build and push images ----
+      - name: Build and push image with SemVer
         run: |
           IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/apache-hello"
-          TAG="${{ steps.version.outputs.tag }}"
-          docker build -t $IMAGE:$TAG .
-          docker push $IMAGE:$TAG
+          VERSION="${{ steps.semver.outputs.version }}"
 
-      - name: Tag latest
+          docker build -t $IMAGE:$VERSION .
+          docker push $IMAGE:$VERSION
+
+      - name: Tag & Push latest
         run: |
           IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/apache-hello"
-          TAG="${{ steps.version.outputs.tag }}"
-          docker tag $IMAGE:$TAG $IMAGE:latest
+          VERSION="${{ steps.semver.outputs.version }}"
+
+          docker tag $IMAGE:$VERSION $IMAGE:latest
           docker push $IMAGE:latest

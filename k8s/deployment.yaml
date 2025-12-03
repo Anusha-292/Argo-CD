@@ -4,6 +4,19 @@ metadata:
   name: apache-hello
   labels:
     app: apache-hello
+  annotations:
+    # ArgoCD Image Updater watches this image
+    argocd-image-updater.argoproj.io/image-list: apache=docker.io/anusha292/apache-hello
+
+    # Update strategy: use semver tags (v1.0.0, v1.0.1, v2.0.0)
+    argocd-image-updater.argoproj.io/apache.update-strategy: semver
+
+    # Allow any semver-like tags (vX.Y.Z)
+    argocd-image-updater.argoproj.io/apache.allow-tags: "regexp:^v[0-9]+\\.[0-9]+\\.[0-9]+$"
+
+    # Tell updater to write the new tag back into Git
+    argocd-image-updater.argoproj.io/write-back-method: git
+
 spec:
   replicas: 1
   selector:
@@ -16,9 +29,11 @@ spec:
     spec:
       imagePullSecrets:
         - name: docker-creds
+
       containers:
         - name: apache
-          image: docker.io/anusha292/apache-hello:latest
+          # ArgoCD Image Updater WILL update this tag automatically in Git
+          image: docker.io/anusha292/apache-hello:v0.0.0
           imagePullPolicy: Always
           ports:
             - containerPort: 80
