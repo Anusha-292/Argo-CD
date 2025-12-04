@@ -22,7 +22,7 @@ spec:
   source:
     repoURL: https://github.com/Anusha-292/Argo-CD
     targetRevision: testing
-    path: charts              # <-- points to your Helm chart
+    path: charts/webapp              # <-- points to your Helm chart
     helm:
       releaseName: webapp
       valueFiles:
