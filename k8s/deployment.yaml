@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: apache-hello
-  nameespace: argocd
+  namespace: argocd
   labels:
     app: apache-hello
 spec:
