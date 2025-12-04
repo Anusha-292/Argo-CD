@@ -20,7 +20,6 @@ spec:
 
       containers:
         - name: apache
-          # ArgoCD Image Updater WILL update this tag automatically in Git
           image: docker.io/anusha292/apache-hello:v1.0.0
           imagePullPolicy: Always
           ports:
