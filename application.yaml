@@ -29,7 +29,7 @@ spec:
         - values.yaml
 
   destination:
-    namespace: webapp
+    namespace: argocd
     server: https://kubernetes.default.svc
 
   syncPolicy:
