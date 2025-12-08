@@ -14,6 +14,7 @@ metadata:
     argocd-image-updater.argoproj.io/git-branch: testing
     argocd-image-updater.argoproj.io/git-repo: https://github.com/Anusha-292/Argo-CD
     argocd-image-updater.argoproj.io/write-back-credentials: git-creds
+    argocd-image-updater.argoproj.io/apache.pull-secret: docker-creds:argocd
     # ----------------------------------------------------------
 
 spec:
