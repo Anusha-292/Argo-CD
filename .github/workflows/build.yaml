@@ -48,8 +48,8 @@ jobs:
         run: |
           new_tag=${{ steps.semver.outputs.version }}
           echo "Updating values.yaml with tag: $new_tag"
-          sed -i "s|tag: .*|tag: $new_tag|" values.yaml
-          git add values.yaml VERSION
+          sed -i "s|tag: .*|tag: $new_tag|" charts/webapp/values.yaml
+          git add charts/webapp/values.yaml VERSION
 
       # ------------------ DOCKER LOGIN ------------------
       - name: Login to DockerHub
